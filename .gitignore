@@ -1,0 +1,86 @@
+# 실시간 투표 플랫폼 백엔드 .gitignore
+
+# 환경 변수 및 설정 파일
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python 관련
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 가상환경
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# 데이터베이스
+*.db
+*.sqlite
+*.sqlite3
+voting_app.db
+
+# IDE 및 에디터
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 로그 파일
+*.log
+logs/
+
+# 테스트 관련
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# 임시 파일
+*.tmp
+*.temp
+
+# Alembic
+alembic/versions/*.py
+!alembic/versions/.gitkeep
+
+# 미디어 파일
+uploads/
+static/media/
+
+# 백업 파일
+*.bak
+*.backup
