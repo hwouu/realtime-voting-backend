@@ -16,7 +16,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings, get_cors_origins, get_logging_config
 from app.database.session import init_db
 from app.api.routes import users, polls, chat, memos
-from app.websocket.manager import WebSocketManager
+from app.websocket.manager import websocket_manager
 from app.websocket.events import setup_websocket_events
 
 
@@ -37,7 +37,7 @@ async def lifespan(app: FastAPI):
     logger.info("✅ 데이터베이스 초기화 완료")
     
     # WebSocket 매니저 초기화
-    app.state.websocket_manager = WebSocketManager()
+    app.state.websocket_manager = websocket_manager
     logger.info("🔌 WebSocket 매니저 초기화 완료")
     
     yield
