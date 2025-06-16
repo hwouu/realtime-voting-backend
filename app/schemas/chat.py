@@ -4,10 +4,9 @@
 채팅 메시지 관련 Pydantic 모델
 """
 
-from pydantic import BaseModel, Field, validator
 from typing import List, Optional
 from datetime import datetime
-from ..models.message import MessageType
+from pydantic import BaseModel, Field, validator
 
 
 class ChatMessageCreateRequest(BaseModel):
@@ -68,8 +67,8 @@ class SystemMessageCreate(BaseModel):
         max_length=500,
         description="시스템 메시지 내용"
     )
-    message_type: MessageType = Field(
-        default=MessageType.SYSTEM,
+    message_type: str = Field(
+        default="system",
         description="메시지 유형"
     )
     metadata: Optional[dict] = Field(
