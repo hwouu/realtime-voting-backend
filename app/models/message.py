@@ -37,7 +37,7 @@ class ChatMessage(Base):
     user_id = Column(String, ForeignKey("users.id"), nullable=True)  # 시스템 메시지는 null 가능
     
     # 추가 메타데이터 (JSON 형태의 추가 정보)
-    metadata = Column(Text, nullable=True)  # JSON 문자열로 저장
+    message_metadata = Column(Text, nullable=True)  # JSON 문자열로 저장
     
     # 관계 설정
     user = relationship("User", back_populates="chat_messages")
@@ -64,10 +64,10 @@ class ChatMessage(Base):
             data["username"] = "Unknown"
         
         # 메타데이터 파싱 (JSON)
-        if self.metadata:
+        if self.message_metadata:
             import json
             try:
-                data["metadata"] = json.loads(self.metadata)
+                data["metadata"] = json.loads(self.message_metadata)
             except json.JSONDecodeError:
                 data["metadata"] = None
         
@@ -91,7 +91,7 @@ class ChatMessage(Base):
             user_id=None,
             message=message,
             message_type=MessageType.SYSTEM,
-            metadata=json.dumps(metadata) if metadata else None,
+            message_metadata=json.dumps(metadata) if metadata else None,
             created_at=datetime.utcnow()
         )
     
@@ -110,7 +110,7 @@ class ChatMessage(Base):
             user_id=None,
             message=message,
             message_type=MessageType.VOTE_UPDATE,
-            metadata=json.dumps(metadata),
+            message_metadata=json.dumps(metadata),
             created_at=datetime.utcnow()
         )
     
@@ -125,7 +125,7 @@ class ChatMessage(Base):
             user_id=None,
             message=message,
             message_type=MessageType.USER_JOIN,
-            metadata=json.dumps(metadata),
+            message_metadata=json.dumps(metadata),
             created_at=datetime.utcnow()
         )
     
@@ -140,7 +140,7 @@ class ChatMessage(Base):
             user_id=None,
             message=message,
             message_type=MessageType.USER_LEAVE,
-            metadata=json.dumps(metadata),
+            message_metadata=json.dumps(metadata),
             created_at=datetime.utcnow()
         )
     
@@ -158,7 +158,7 @@ class ChatMessage(Base):
             user_id=None,
             message=message,
             message_type=MessageType.POLL_CREATED,
-            metadata=json.dumps(metadata),
+            message_metadata=json.dumps(metadata),
             created_at=datetime.utcnow()
         )
     
@@ -178,11 +178,11 @@ class ChatMessage(Base):
     
     def get_metadata(self) -> dict:
         """메타데이터 파싱 반환"""
-        if not self.metadata:
+        if not self.message_metadata:
             return {}
         
         import json
         try:
-            return json.loads(self.metadata)
+            return json.loads(self.message_metadata)
         except json.JSONDecodeError:
             return {}
