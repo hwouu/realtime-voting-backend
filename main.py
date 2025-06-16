@@ -7,6 +7,7 @@ FastAPI 서버 및 WebSocket 서버 실행
 import uvicorn
 import asyncio
 import logging
+import logging.config
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
