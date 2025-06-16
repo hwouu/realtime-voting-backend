@@ -8,6 +8,7 @@ uvicorn[standard]==0.34.0
 sqlalchemy==2.0.36
 alembic==1.14.0
 aiosqlite==0.20.0
+greenlet==3.0.3
 
 # 인증 및 보안
 python-jose[cryptography]==3.3.0
@@ -20,6 +21,7 @@ websockets==13.1
 
 # 데이터 검증
 pydantic==2.10.3
+pydantic-settings==2.7.0
 email-validator==2.2.0
 
 # 환경 변수 관리
