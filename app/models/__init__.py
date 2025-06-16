@@ -5,7 +5,8 @@
 """
 
 from .user import User
-from .poll import Poll, PollOption, Vote
+from .poll import Poll, PollOption
+from .vote import Vote
 from .message import ChatMessage, MessageType
 from .memo import UserMemo
 

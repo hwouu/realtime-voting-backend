@@ -15,7 +15,8 @@ from ...api.deps import (
     verify_poll_owner, verify_active_poll, get_pagination_params, PaginationParams
 )
 from ...models.user import User
-from ...models.poll import Poll, PollOption, Vote
+from ...models.poll import Poll, PollOption
+from ...models.vote import Vote
 from ...models.message import ChatMessage
 from ...schemas.poll import (
     PollCreateRequest,
