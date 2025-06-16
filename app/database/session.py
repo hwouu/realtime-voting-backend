@@ -106,9 +106,14 @@ async def init_db():
         # 동기 테이블 생성
         create_db_and_tables()
         
-        # 비동기 테이블 생성 (WebSocket용)
-        if async_engine:
-            await create_async_db_and_tables()
+        # 비동기 테이블 생성 (선택적)
+        # greenlet 패키지가 설치된 경우에만 실행
+        try:
+            import greenlet
+            if async_engine:
+                await create_async_db_and_tables()
+        except ImportError:
+            logger.warning("⚠️ greenlet 패키지가 없어 비동기 DB 기능을 사용할 수 없습니다")
         
         # 초기 데이터 생성
         await create_initial_data()
