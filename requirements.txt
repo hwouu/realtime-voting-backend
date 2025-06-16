@@ -1,4 +1,4 @@
-# FastAPI 백엔드 서버 의존성 패키지
+# FastAPI 백엔드 서버 의존성 패키지 (수정된 버전)
 
 # 웹 프레임워크
 fastapi==0.115.6
@@ -6,8 +6,8 @@ uvicorn[standard]==0.34.0
 
 # 데이터베이스
 sqlalchemy==2.0.36
-sqlite3-python==0.5.4
 alembic==1.14.0
+aiosqlite==0.20.0
 
 # 인증 및 보안
 python-jose[cryptography]==3.3.0
@@ -22,9 +22,6 @@ websockets==13.1
 pydantic==2.10.3
 email-validator==2.2.0
 
-# CORS 및 미들웨어
-python-cors==1.7.0
-
 # 환경 변수 관리
 python-dotenv==1.0.1
 
@@ -37,7 +34,7 @@ orjson==3.10.12
 # 로깅
 structlog==24.4.0
 
-# 개발 도구
+# 개발 도구 (선택사항)
 pytest==8.3.4
 pytest-asyncio==0.24.0
 black==24.10.0
