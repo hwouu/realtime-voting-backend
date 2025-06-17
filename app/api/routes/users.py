@@ -49,9 +49,14 @@ async def register_user(
         UserLoginResponse: 등록된 사용자 정보 및 액세스 토큰
     """
     try:
+        print(f"User registration attempt: {user_data.nickname}")
+        
         # 닉네임 유효성 검증
         nickname = sanitize_nickname(user_data.nickname)
+        print(f"Sanitized nickname: {nickname}")
+        
         if not validate_nickname(nickname):
+            print(f"Invalid nickname: {nickname}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="유효하지 않은 닉네임입니다"
@@ -60,21 +65,26 @@ async def register_user(
         # 중복 닉네임 확인
         existing_user = db.query(User).filter(User.nickname == nickname).first()
         if existing_user:
+            print(f"Nickname already exists: {nickname}")
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="이미 사용 중인 닉네임입니다"
             )
         
         # 새 사용자 생성
+        print(f"Creating new user: {nickname}")
         new_user = User.create_user(nickname=nickname)
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        print(f"User created successfully: {new_user.id}")
         
         # 액세스 토큰 생성
+        print(f"Creating access token for user: {new_user.id}")
         token_info = create_user_token(new_user.id, new_user.nickname)
+        print(f"Token created successfully")
         
-        return UserLoginResponse(
+        response = UserLoginResponse(
             success=True,
             user=UserResponse.from_orm(new_user),
             access_token=token_info["access_token"],
@@ -82,13 +92,20 @@ async def register_user(
             expires_in=token_info["expires_in"]
         )
         
+        print(f"Registration successful for user: {nickname}")
+        return response
+        
     except HTTPException:
+        print(f"Registration failed with HTTPException")
         raise
     except Exception as e:
+        print(f"Registration error: {e}")
+        import traceback
+        traceback.print_exc()
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="사용자 등록 중 오류가 발생했습니다"
+            detail=f"사용자 등록 중 오류가 발생했습니다: {str(e)}"
         )
 
 
