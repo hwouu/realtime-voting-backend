@@ -158,6 +158,8 @@ async def get_polls_list(
         PollListResponse: 투표 목록
     """
     try:
+        print(f"Getting polls list - pagination: offset={pagination.offset}, limit={pagination.limit}")
+        
         # 기본 쿼리
         query = db.query(Poll)
         
@@ -167,9 +169,11 @@ async def get_polls_list(
         
         # 전체 개수
         total = query.count()
+        print(f"Total polls: {total}")
         
         # 활성 투표 개수
         active_count = db.query(Poll).filter(Poll.is_active == True).count()
+        print(f"Active polls: {active_count}")
         
         # 최신순으로 정렬하여 조회
         polls = query.order_by(desc(Poll.created_at))\
@@ -177,19 +181,43 @@ async def get_polls_list(
                     .limit(pagination.limit)\
                     .all()
         
-        # 응답 생성
-        poll_responses = [PollResponse.from_orm(poll) for poll in polls]
+        print(f"Retrieved {len(polls)} polls")
         
-        return PollListResponse(
+        # 응답 생성 - 안전한 방식으로 처리
+        poll_responses = []
+        for i, poll in enumerate(polls):
+            try:
+                print(f"Processing poll {i+1}/{len(polls)}: {poll.id} - {poll.title}")
+                poll_response = PollResponse.from_orm(poll)
+                poll_responses.append(poll_response)
+                print(f"Successfully processed poll {poll.id}")
+            except Exception as poll_error:
+                print(f"Error processing poll {poll.id}: {poll_error}")
+                # 개별 투표 처리 실패 시 건너뛰기
+                continue
+        
+        print(f"Successfully created {len(poll_responses)} poll responses")
+        
+        response = PollListResponse(
             polls=poll_responses,
             total=total,
             active_count=active_count
         )
         
+        print(f"Returning poll list response with {len(response.polls)} polls")
+        return response
+        
     except Exception as e:
+        print(f"Error in get_polls_list: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # DB 세션 롤백
+        db.rollback()
+        
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="투표 목록 조회 중 오류가 발생했습니다"
+            detail=f"투표 목록 조회 중 오류가 발생했습니다: {str(e)}"
         )
 
 
