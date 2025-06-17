@@ -33,6 +33,16 @@ class PollOptionResponse(BaseModel):
     votes: int = 0
     percentage: float = 0.0
     
+    @classmethod
+    def from_orm(cls, option):
+        """ORM 객체로부터 스키마 생성"""
+        return cls(
+            id=option.id,
+            text=option.text,
+            votes=option.vote_count,
+            percentage=option.to_dict().get('percentage', 0.0)
+        )
+    
     class Config:
         from_attributes = True
 
@@ -114,8 +124,23 @@ class PollResponse(BaseModel):
     created_at: datetime
     ends_at: Optional[datetime] = None
     created_by: str
-    options: List[PollOptionResponse]
-    total_votes: int
+    options: List[PollOptionResponse] = []
+    total_votes: int = 0
+    
+    @classmethod
+    def from_orm(cls, poll):
+        """ORM 객체로부터 스키마 생성"""
+        return cls(
+            id=poll.id,
+            title=poll.title,
+            description=poll.description,
+            is_active=poll.is_active,
+            created_at=poll.created_at,
+            ends_at=poll.ends_at,
+            created_by=poll.created_by,
+            options=[PollOptionResponse.from_orm(option) for option in poll.options],
+            total_votes=poll.total_votes
+        )
     
     class Config:
         from_attributes = True
@@ -156,10 +181,6 @@ class VoteRequest(BaseModel):
     option_id: str = Field(
         ...,
         description="선택한 투표 옵션 ID"
-    )
-    user_id: str = Field(
-        ...,
-        description="투표자 사용자 ID"
     )
 
 

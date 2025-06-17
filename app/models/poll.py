@@ -61,7 +61,13 @@ class Poll(Base):
     @property
     def total_votes(self) -> int:
         """전체 투표 수"""
-        return sum(option.vote_count for option in self.options)
+        try:
+            if not self.options:
+                return 0
+            return sum(option.vote_count for option in self.options)
+        except Exception as e:
+            print(f"Error calculating total_votes: {e}")
+            return 0
     
     @property
     def is_ended(self) -> bool:
